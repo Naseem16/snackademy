@@ -1,0 +1,26 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+Thumbs.db
+
+# Claude Code local config (contains machine-specific paths)
+.claude/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite / PWA generated
+dev-dist
+
+# Content validator scratch dir
+.content-check
+.content-check.last
