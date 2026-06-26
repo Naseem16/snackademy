@@ -26,7 +26,7 @@ export default function App() {
           <Route path="*" element={<Home />} />
         </Routes>
         <footer className="mt-8 border-t border-white/5 pt-4 text-center text-[11px] text-slate-600">
-          © 2026 Mphasis. All rights reserved.
+          © 2026. All rights reserved.
         </footer>
       </main>
       <BadgeToast />
