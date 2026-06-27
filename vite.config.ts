@@ -9,6 +9,23 @@ const base = process.env.BASE_PATH ?? '/aws-ai-practitioner-learning-app/'
 
 export default defineConfig({
   base,
+  build: {
+    // Split vendor libs and each content track into their own chunks. This keeps
+    // the app shell small and means updating one track's content only busts that
+    // track's cached chunk — not the whole bundle — on the next deploy.
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('framer-motion')) return 'vendor-motion'
+            return 'vendor'
+          }
+          const m = id.match(/content[\\/]certifications[\\/]([^\\/.]+)/)
+          if (m) return `content-${m[1]}`
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({

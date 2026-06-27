@@ -1,6 +1,8 @@
 import type { Certification, Domain, Chapter, Section, Card } from './types'
 import { awsAiPractitioner } from './certifications/aws-ai-practitioner'
 import { awsSolutionsArchitect } from './certifications/aws-solutions-architect'
+import { javascript } from './certifications/javascript'
+import { reactjs } from './certifications/reactjs'
 
 // ── "Coming soon" certifications ──────────────────────────────────────────
 // Future certs are added here. Set available:false and leave domains empty to
@@ -48,8 +50,36 @@ const comingSoon: Certification[] = [
 export const certifications: Certification[] = [
   awsAiPractitioner,
   awsSolutionsArchitect,
+  javascript,
+  reactjs,
   ...comingSoon,
 ]
+
+/** Display groups for the home screen. */
+export interface CertGroup {
+  id: string
+  title: string
+  subtitle: string
+  certs: Certification[]
+}
+
+export function certGroups(): CertGroup[] {
+  const groups: CertGroup[] = [
+    {
+      id: 'aws',
+      title: 'AWS Certifications',
+      subtitle: 'Pass the exam, earn the badge',
+      certs: certifications.filter((c) => c.provider === 'AWS'),
+    },
+    {
+      id: 'dev',
+      title: 'Developer Learning Paths',
+      subtitle: 'Master the language & framework',
+      certs: certifications.filter((c) => c.kind === 'path'),
+    },
+  ]
+  return groups.filter((g) => g.certs.length > 0)
+}
 
 export function getCertification(id: string | undefined): Certification | undefined {
   return certifications.find((c) => c.id === id)

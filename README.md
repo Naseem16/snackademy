@@ -5,15 +5,18 @@ Built to make studying *fun*: bite-sized cards, plain-English explanations, real
 analogies, visual diagrams, quick quizzes, streaks, XP, levels and badges — all with
 **no login required**.
 
-Ships today with full content for:
+Ships today with full content for two **AWS certification tracks** and two **developer
+learning paths** (each with a dedicated **🎤 Interview Prep** section):
 
-| Cert | Code | Level | Cards |
-|------|------|-------|-------|
-| 🤖 AWS Certified AI Practitioner | AIF-C01 | Foundational | 184 |
-| 🏛️ AWS Certified Solutions Architect – Associate | SAA-C03 | Associate | 172 |
+| Track | Code | Level | Interview prep |
+|-------|------|-------|----------------|
+| 🤖 AWS Certified AI Practitioner | AIF-C01 | Foundational | — |
+| 🏛️ AWS Certified Solutions Architect – Associate | SAA-C03 | Associate | — |
+| 🟨 JavaScript Mastery | JS | Beginner → Advanced | ✅ |
+| ⚛️ React with Hooks | React | Intermediate | ✅ |
 
-…plus a structure designed so new certifications (Cloud Practitioner, Developer
-Associate, and beyond) can be dropped in with zero code changes.
+…plus a structure designed so new certifications and paths (Cloud Practitioner, Developer
+Associate, TypeScript, Node.js, and beyond) can be dropped in with zero code changes.
 
 ---
 
@@ -21,8 +24,9 @@ Associate, and beyond) can be dropped in with zero code changes.
 
 - **Mobile-first** — designed for the phone, scales up to desktop. Safe-area aware.
 - **Card-based microlearning** — one idea per card, swipe through them. Card kinds:
-  `concept`, `analogy 💡`, `example 🧪`, `diagram 🗺️`, `exam tip 🎯`, `compare ⚖️`, and
-  interactive `quiz ❓` with instant feedback + explanations.
+  `concept`, `analogy 💡`, `example 🧪`, `diagram 🗺️`, `exam tip 🎯`, `compare ⚖️`,
+  interactive `quiz ❓` with instant feedback, and `qa 🎤` interview questions with a
+  tap-to-reveal model answer + likely follow-ups.
 - **Fun visual diagrams** — data-driven SVG/HTML diagrams (flows, stacks, pyramids,
   cycles, quadrants, comparisons) authored as plain data.
 - **No login. Device-local everything** — progress, streaks, bookmarks and badges are
@@ -103,6 +107,45 @@ manually from the **Actions** tab (the workflow has `workflow_dispatch`).
 
 ---
 
+## 🔄 Keeping content up to date
+
+Course material changes over time (AWS renames services, exams get new domains, React
+ships new patterns). Here's how updates flow to learners — there are **no migrations and no
+database**, because all content is plain TypeScript data compiled into the app.
+
+**1. Edit the content data.** Open the relevant module in `src/content/certifications/` and
+change/add/remove cards. Each card is independent, so edits are low-risk.
+
+**2. Bump the version stamp.** Update `version` and `lastUpdated` on that `Certification`
+object. These surface in the **Settings** screen so learners can see how fresh each track is.
+
+**3. Validate.** `npm run validate` checks every track for structural problems (duplicate
+ids, quizzes without exactly one correct answer, malformed diagrams, empty Q&A answers)
+*before* anything ships. It also runs automatically as the first step of `npm run build`,
+so a broken edit can never reach production.
+
+**4. Push.** Commit and push to `main`. The GitHub Actions workflow rebuilds and redeploys.
+
+**5. Learners get it automatically.** The app is an installable PWA with a service worker.
+When a returning learner opens it (or while it's open — it re-checks hourly), the new build
+is detected and a **"📚 New content available — Refresh"** banner appears. One tap swaps in
+the latest content. Their progress, streaks, badges and bookmarks are keyed by stable card
+IDs in `localStorage`, so updates never wipe progress — as long as you keep existing card
+`id`s stable. (Renaming an `id` simply makes that one card "unread" again; deleting a card
+drops its completion. Add new cards with new ids freely.)
+
+> **Stability rule of thumb:** treat card `id`s as permanent keys. Reword a card's text
+> freely under the same id; only mint a *new* id for genuinely new material.
+
+**Future automation ideas** (hooks already in place to make these easy):
+
+- The deploy workflow has `workflow_dispatch`, so you can trigger a rebuild on a schedule
+  (add a `schedule:` cron) — handy if content is ever sourced from an external feed.
+- Because content is typed data, you could generate or refresh it from an LLM/script in CI,
+  run `npm run validate` as the gate, and open a PR automatically.
+- The `version`/`lastUpdated` fields make it trivial to add a "What's new" changelog screen
+  later without schema changes.
+
 ## 🗂️ Project structure
 
 ```
@@ -110,9 +153,11 @@ src/
   content/
     types.ts                     # the content schema (Certification → Domain → Chapter → Section → Card)
     index.ts                     # registry of all certifications (+ "coming soon" teasers)
-    certifications/
+    certifications/             # one module per track (certs + learning paths)
       aws-ai-practitioner.ts      # AIF-C01 content
       aws-solutions-architect.ts  # SAA-C03 content
+      javascript.ts               # JavaScript path + interview prep
+      reactjs.ts                  # React path + interview prep
   store/
     ProgressContext.tsx          # localStorage state: progress, bookmarks, streaks, badges, XP
     badges.ts                    # badge/milestone definitions + XP→level curve

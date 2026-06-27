@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { certifications, getCertification, getSection } from '../content'
+import { certGroups, getCertification, getSection } from '../content'
 import { countCards } from '../content/types'
 import { useProgress } from '../store/ProgressContext'
 import { ProgressBar, ProgressRing } from '../components/Ui'
@@ -122,26 +122,31 @@ export default function Home() {
     <div>
       <header className="mb-5 pt-2">
         <h1 className="text-2xl font-extrabold text-white">
-          CertPrep <span className="text-brand-400">·</span> AWS
+          CertPrep<span className="text-brand-400">.</span>
         </h1>
         <p className="text-sm text-slate-400">
-          Bite-sized, fun prep for your next cloud certification.
+          Bite-sized, fun prep — AWS certs, JavaScript, React &amp; interview prep.
         </p>
       </header>
 
       <StatStrip />
       <ContinueCard />
 
-      <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-          Certifications
-        </h2>
-      </div>
-      <div className="grid grid-cols-1 gap-3">
-        {certifications.map((c) => (
-          <CertCard key={c.id} certId={c.id} />
-        ))}
-      </div>
+      {certGroups().map((group) => (
+        <section key={group.id} className="mb-6">
+          <div className="mb-2 flex items-baseline justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+              {group.title}
+            </h2>
+            <span className="text-[11px] text-slate-500">{group.subtitle}</span>
+          </div>
+          <div className="grid grid-cols-1 gap-3">
+            {group.certs.map((c) => (
+              <CertCard key={c.id} certId={c.id} />
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   )
 }

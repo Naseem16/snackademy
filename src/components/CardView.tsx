@@ -14,6 +14,53 @@ const KIND_META: Record<
   tip: { label: 'Exam Tip', emoji: '🎯', chip: 'bg-rose-500/20 text-rose-200' },
   compare: { label: 'Compare', emoji: '⚖️', chip: 'bg-fuchsia-500/20 text-fuchsia-200' },
   quiz: { label: 'Quick Check', emoji: '❓', chip: 'bg-brand-500/20 text-brand-200' },
+  qa: { label: 'Interview Q', emoji: '🎤', chip: 'bg-violet-500/20 text-violet-200' },
+}
+
+function QaCard({ card }: { card: Card }) {
+  const [revealed, setRevealed] = useState(false)
+  return (
+    <div>
+      <p className="mb-4 text-lg font-semibold leading-snug text-white">{card.question}</p>
+      {!revealed ? (
+        <button onClick={() => setRevealed(true)} className="btn-primary w-full">
+          💡 Reveal answer
+        </button>
+      ) : (
+        <div className="animate-pop-in">
+          <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-violet-300">
+            Model answer
+          </div>
+          {card.body && <MarkdownLite text={card.body} />}
+          {card.terms && card.terms.length > 0 && (
+            <div className="mt-3 space-y-2">
+              {card.terms.map((t, i) => (
+                <div key={i} className="rounded-lg bg-slate-900/50 px-3 py-2">
+                  <span className="text-sm font-semibold text-violet-300">{t.term}</span>
+                  <span className="text-sm text-slate-300"> — {t.definition}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {card.followUps && card.followUps.length > 0 && (
+            <div className="mt-4 rounded-xl border border-white/10 bg-slate-900/50 p-3">
+              <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                🔥 Follow-ups they might ask
+              </div>
+              <ul className="space-y-1">
+                {card.followUps.map((f, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-slate-300">
+                    <span className="text-violet-400">›</span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
 }
 
 function QuizCard({
@@ -117,7 +164,7 @@ export default function CardView({
         </span>
       </div>
 
-      {card.title && card.kind !== 'quiz' && (
+      {card.title && card.kind !== 'quiz' && card.kind !== 'qa' && (
         <h3 className="mb-3 text-xl font-bold leading-snug text-white">
           {card.emoji && <span className="mr-1.5">{card.emoji}</span>}
           {card.title}
@@ -130,6 +177,8 @@ export default function CardView({
           savedCorrect={savedQuizCorrect}
           onAnswer={(c) => onQuizAnswer?.(c)}
         />
+      ) : card.kind === 'qa' ? (
+        <QaCard card={card} />
       ) : (
         <>
           {card.body && <MarkdownLite text={card.body} />}

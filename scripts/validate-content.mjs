@@ -25,7 +25,7 @@ const { certifications } = await import(pathToFileURL(outfile).href)
 const errors = []
 const warnings = []
 const DIAGRAM_TYPES = ['flow', 'stack', 'pyramid', 'cycle', 'quadrant', 'compare']
-const CARD_KINDS = ['concept', 'analogy', 'example', 'diagram', 'tip', 'compare', 'quiz']
+const CARD_KINDS = ['concept', 'analogy', 'example', 'diagram', 'tip', 'compare', 'quiz', 'qa']
 
 let totalCards = 0
 let totalQuizzes = 0
@@ -94,6 +94,11 @@ for (const cert of certifications) {
           } else if (card.kind === 'compare') {
             if (!card.compare || !card.compare.headers || !card.compare.rows)
               warnings.push(`[${cert.id}/${card.id}] compare card missing table`)
+          } else if (card.kind === 'qa') {
+            if (!card.question)
+              errors.push(`[${cert.id}/${card.id}] qa card missing question`)
+            if (!card.body || card.body.trim().length < 10)
+              errors.push(`[${cert.id}/${card.id}] qa card missing/short answer body`)
           } else {
             if (!card.body || card.body.trim().length < 10)
               warnings.push(`[${cert.id}/${card.id}] ${card.kind} card has little/no body`)

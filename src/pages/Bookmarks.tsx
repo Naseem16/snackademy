@@ -43,6 +43,7 @@ const kindEmoji: Record<Card['kind'], string> = {
   tip: '🎯',
   compare: '⚖️',
   quiz: '❓',
+  qa: '🎤',
 }
 
 export default function Bookmarks() {

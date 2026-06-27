@@ -52,7 +52,7 @@ export default function CertOverview() {
       {cert.examFacts.length > 0 && (
         <div className="card-surface mb-5 p-3">
           <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-            Exam at a glance
+            {cert.kind === 'path' ? 'At a glance' : 'Exam at a glance'}
           </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             {cert.examFacts.map((f) => (
@@ -66,7 +66,7 @@ export default function CertOverview() {
       )}
 
       <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
-        Exam domains
+        {cert.kind === 'path' ? 'Topics' : 'Exam domains'}
       </h2>
       <div className="space-y-3">
         {cert.domains.map((d) => {

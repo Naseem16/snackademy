@@ -12,6 +12,7 @@ export type CardKind =
   | 'tip' // exam tip / gotcha
   | 'compare' // side-by-side comparison
   | 'quiz' // knowledge check
+  | 'qa' // interview-style question with a reveal-able answer
 
 export interface KeyTerm {
   term: string
@@ -68,10 +69,13 @@ export interface Card {
   compare?: { headers: string[]; rows: string[][] }
   // diagram cards
   diagram?: DiagramSpec
-  // quiz cards
+  // quiz cards (and the question text for 'qa' cards)
   question?: string
   options?: QuizOption[]
   explanation?: string
+  // qa (interview) cards: `question` holds the prompt, `body` holds the
+  // reveal-able model answer; optional follow-up prompts to think about.
+  followUps?: string[]
 }
 
 export interface Section {
@@ -98,7 +102,14 @@ export interface Domain {
   chapters: Chapter[]
 }
 
-export type CertLevel = 'Foundational' | 'Associate' | 'Professional' | 'Specialty'
+export type CertLevel =
+  | 'Foundational'
+  | 'Associate'
+  | 'Professional'
+  | 'Specialty'
+  | 'Beginner'
+  | 'Intermediate'
+  | 'Advanced'
 
 export interface ExamFact {
   label: string
@@ -107,10 +118,12 @@ export interface ExamFact {
 
 export interface Certification {
   id: string
-  code: string // e.g. "AIF-C01"
+  /** 'certification' = exam track (AWS); 'path' = skill learning path (JS, React). Defaults to certification. */
+  kind?: 'certification' | 'path'
+  code: string // e.g. "AIF-C01" for certs, or a short tag like "JS" for paths
   title: string
   shortTitle: string
-  provider: string // e.g. "AWS"
+  provider: string // e.g. "AWS", "JavaScript", "React"
   level: CertLevel
   /** Tailwind gradient classes for the cert's accent, e.g. "from-orange-500 to-amber-600". */
   gradient: string
