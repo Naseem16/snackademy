@@ -10,7 +10,11 @@ function ContinueCard() {
   const { state, certProgress } = useProgress()
   const entries = Object.entries(state.lastVisited)
   if (entries.length === 0) return null
-  const [certId, pos] = entries[entries.length - 1]
+  // Pick the most recently visited course (by timestamp), not just the last
+  // key inserted — updating an existing key doesn't reorder it.
+  const [certId, pos] = entries.reduce((latest, cur) =>
+    (cur[1].ts ?? 0) > (latest[1].ts ?? 0) ? cur : latest,
+  )
   const cert = getCertification(certId)
   if (!cert) return null
   const found = getSection(cert, pos.sectionId)

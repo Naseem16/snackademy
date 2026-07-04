@@ -22,7 +22,7 @@ interface PersistState {
   quizResults: Record<string, QuizResult> // cardKey -> result
   earnedBadges: Record<string, number> // badgeId -> earned timestamp
   streak: { current: number; longest: number; lastActiveDay: string }
-  lastVisited: Record<string, { sectionId: string; cardIndex: number }> // certId -> position
+  lastVisited: Record<string, { sectionId: string; cardIndex: number; ts: number }> // certId -> position
   examScores: Record<string, ExamScore> // `${certId}::${examId}` -> score
 }
 
@@ -267,7 +267,10 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const setLastVisited = (certId: string, sectionId: string, cardIndex: number) =>
     setState((prev) => ({
       ...prev,
-      lastVisited: { ...prev.lastVisited, [certId]: { sectionId, cardIndex } },
+      lastVisited: {
+        ...prev.lastVisited,
+        [certId]: { sectionId, cardIndex, ts: Date.now() },
+      },
     }))
 
   const recordExam = (certId: string, examId: string, scorePct: number) =>
