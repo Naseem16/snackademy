@@ -1,88 +1,142 @@
 import type { Certification, Domain, Chapter, Section, Card } from './types'
 import { awsAiPractitioner } from './certifications/aws-ai-practitioner'
 import { awsSolutionsArchitect } from './certifications/aws-solutions-architect'
+import { awsDeveloperAssociate } from './certifications/aws-developer-associate'
+import { awsCloudPractitioner } from './certifications/aws-cloud-practitioner'
 import { javascript } from './certifications/javascript'
 import { reactjs } from './certifications/reactjs'
-
-// ── "Coming soon" certifications ──────────────────────────────────────────
-// Future certs are added here. Set available:false and leave domains empty to
-// render a teaser card. To launch one, author a module like the two above and
-// flip `available` to true.
-const comingSoon: Certification[] = [
-  {
-    id: 'aws-developer-associate',
-    code: 'DVA-C02',
-    title: 'AWS Certified Developer – Associate',
-    shortTitle: 'Developer',
-    provider: 'AWS',
-    level: 'Associate',
-    gradient: 'from-emerald-500 to-teal-600',
-    icon: '🧑‍💻',
-    tagline: 'Build & deploy on AWS',
-    description:
-      'Develop, deploy, and debug cloud-based applications using AWS. Coming soon!',
-    examFacts: [],
-    version: '—',
-    lastUpdated: '2025-01-15',
-    available: false,
-    domains: [],
-  },
-  {
-    id: 'aws-cloud-practitioner',
-    code: 'CLF-C02',
-    title: 'AWS Certified Cloud Practitioner',
-    shortTitle: 'Cloud Practitioner',
-    provider: 'AWS',
-    level: 'Foundational',
-    gradient: 'from-fuchsia-500 to-purple-600',
-    icon: '☁️',
-    tagline: 'Your first AWS cert',
-    description:
-      'Foundational understanding of AWS Cloud concepts, services, and terminology. Coming soon!',
-    examFacts: [],
-    version: '—',
-    lastUpdated: '2025-01-15',
-    available: false,
-    domains: [],
-  },
-]
+import { terraform } from './certifications/terraform'
+import { docker } from './certifications/docker'
+import { kubernetes } from './certifications/kubernetes'
 
 export const certifications: Certification[] = [
+  awsCloudPractitioner,
   awsAiPractitioner,
+  awsDeveloperAssociate,
   awsSolutionsArchitect,
   javascript,
   reactjs,
-  ...comingSoon,
+  terraform,
+  docker,
+  kubernetes,
 ]
 
-/** Display groups for the home screen. */
-export interface CertGroup {
+// ── Home navigation tree ────────────────────────────────────────────────
+// Two categories → groups (providers / disciplines) → courses. GCP & Azure
+// are shown as "coming soon" groups until content is authored for them.
+export interface NavGroup {
   id: string
   title: string
   subtitle: string
-  certs: Certification[]
+  icon: string
+  available: boolean
+  /** courses in this group, in display order */
+  certIds: string[]
+  /** cert providers get practice exams */
+  hasPracticeExams?: boolean
 }
 
-export function certGroups(): CertGroup[] {
-  const groups: CertGroup[] = [
-    {
-      id: 'aws',
-      title: 'AWS Certifications',
-      subtitle: 'Pass the exam, earn the badge',
-      certs: certifications.filter((c) => c.provider === 'AWS'),
-    },
-    {
-      id: 'dev',
-      title: 'Developer Learning Paths',
-      subtitle: 'Master the language & framework',
-      certs: certifications.filter((c) => c.kind === 'path'),
-    },
-  ]
-  return groups.filter((g) => g.certs.length > 0)
+export interface NavCategory {
+  id: string
+  title: string
+  subtitle: string
+  icon: string
+  gradient: string
+  groups: NavGroup[]
+}
+
+export const navCategories: NavCategory[] = [
+  {
+    id: 'certifications',
+    title: 'Certifications',
+    subtitle: 'Pass the exam, earn the badge',
+    icon: '🎓',
+    gradient: 'from-orange-500 to-amber-600',
+    groups: [
+      {
+        id: 'aws',
+        title: 'Amazon Web Services',
+        subtitle: 'AWS certifications',
+        icon: '🟧',
+        available: true,
+        certIds: [
+          'aws-cloud-practitioner',
+          'aws-ai-practitioner',
+          'aws-developer-associate',
+          'aws-solutions-architect',
+        ],
+        hasPracticeExams: true,
+      },
+      {
+        id: 'gcp',
+        title: 'Google Cloud',
+        subtitle: 'GCP certifications',
+        icon: '🔵',
+        available: false,
+        certIds: [],
+      },
+      {
+        id: 'azure',
+        title: 'Microsoft Azure',
+        subtitle: 'Azure certifications',
+        icon: '🟦',
+        available: false,
+        certIds: [],
+      },
+    ],
+  },
+  {
+    id: 'developer',
+    title: 'Developer Learning Paths',
+    subtitle: 'Master languages & tools',
+    icon: '💻',
+    gradient: 'from-sky-500 to-indigo-600',
+    groups: [
+      {
+        id: 'languages',
+        title: 'Languages & Frameworks',
+        subtitle: 'JavaScript, React',
+        icon: '🧩',
+        available: true,
+        certIds: ['javascript', 'reactjs'],
+      },
+      {
+        id: 'devops',
+        title: 'DevOps',
+        subtitle: 'Terraform, Docker, Kubernetes',
+        icon: '🛠️',
+        available: true,
+        certIds: ['terraform', 'docker', 'kubernetes'],
+      },
+    ],
+  },
+]
+
+export function getCategory(id: string | undefined): NavCategory | undefined {
+  return navCategories.find((c) => c.id === id)
+}
+
+export function getGroup(id: string | undefined):
+  | { category: NavCategory; group: NavGroup }
+  | undefined {
+  for (const category of navCategories)
+    for (const group of category.groups)
+      if (group.id === id) return { category, group }
+  return undefined
 }
 
 export function getCertification(id: string | undefined): Certification | undefined {
   return certifications.find((c) => c.id === id)
+}
+
+/** Find the nav group (and category) that contains a given course. */
+export function getGroupForCert(certId: string):
+  | { category: NavCategory; group: NavGroup }
+  | undefined {
+  for (const category of navCategories)
+    for (const group of category.groups)
+      if (group.certIds.includes(certId)) return { category, group }
+  return undefined
 }
 
 export function getDomain(cert: Certification, domainId: string): Domain | undefined {

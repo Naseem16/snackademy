@@ -4,9 +4,13 @@ import BottomNav from './components/BottomNav'
 import BadgeToast from './components/BadgeToast'
 import ReloadPrompt from './components/ReloadPrompt'
 import Home from './pages/Home'
+import CategoryPage from './pages/CategoryPage'
+import GroupPage from './pages/GroupPage'
 import CertOverview from './pages/CertOverview'
 import DomainPage from './pages/DomainPage'
 import CardViewer from './pages/CardViewer'
+import ExamsList from './pages/ExamsList'
+import ExamRunner from './pages/ExamRunner'
 import Achievements from './pages/Achievements'
 import Bookmarks from './pages/Bookmarks'
 import Settings from './pages/Settings'
@@ -30,9 +34,13 @@ export default function App() {
       <main className="flex-1 px-4 pb-24 pt-3">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/learn/:categoryId" element={<CategoryPage />} />
+          <Route path="/group/:groupId" element={<GroupPage />} />
           <Route path="/cert/:certId" element={<CertOverview />} />
           <Route path="/cert/:certId/domain/:domainId" element={<DomainPage />} />
           <Route path="/cert/:certId/section/:sectionId" element={<CardViewer />} />
+          <Route path="/cert/:certId/exams" element={<ExamsList />} />
+          <Route path="/cert/:certId/exam/:examId" element={<ExamRunner />} />
           <Route path="/progress" element={<Achievements />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/settings" element={<Settings />} />

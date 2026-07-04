@@ -17,6 +17,10 @@ export interface LearnerStats {
   certsCompleted: string[]
   /** any progress recorded today */
   activeToday: boolean
+  /** number of distinct practice exams passed (>= 70%) */
+  examsPassed: number
+  /** best score achieved on any practice exam (0..100) */
+  bestExamScore: number
   xp: number
   level: number
 }
@@ -127,6 +131,22 @@ export const BADGES: BadgeDef[] = [
     emoji: '🎓',
     tier: 'platinum',
     earned: (s) => s.certsCompleted.length >= 1,
+  },
+  {
+    id: 'exam-ready',
+    name: 'Exam Ready',
+    description: 'Pass a practice exam (70%+).',
+    emoji: '🧭',
+    tier: 'gold',
+    earned: (s) => s.examsPassed >= 1,
+  },
+  {
+    id: 'exam-ace',
+    name: 'Exam Ace',
+    description: 'Score 90%+ on a practice exam.',
+    emoji: '🎖️',
+    tier: 'platinum',
+    earned: (s) => s.bestExamScore >= 90,
   },
   {
     id: 'level-5',

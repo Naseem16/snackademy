@@ -5,18 +5,28 @@ Built to make studying *fun*: bite-sized cards, plain-English explanations, real
 analogies, visual diagrams, quick quizzes, streaks, XP, levels and badges — all with
 **no login required**.
 
-Ships today with full content for two **AWS certification tracks** and two **developer
-learning paths** (each with a dedicated **🎤 Interview Prep** section):
+The Home screen is organised as **Category → Track → Course**:
 
-| Track | Code | Level | Interview prep |
-|-------|------|-------|----------------|
-| 🤖 AWS Certified AI Practitioner | AIF-C01 | Foundational | — |
-| 🏛️ AWS Certified Solutions Architect – Associate | SAA-C03 | Associate | — |
-| 🟨 JavaScript Mastery | JS | Beginner → Advanced | ✅ |
-| ⚛️ React with Hooks | React | Intermediate | ✅ |
+- **🎓 Certifications** → **AWS** (live), **Google Cloud** & **Azure** (coming soon)
+- **💻 Developer Learning Paths** → **Languages & Frameworks**, **DevOps**
 
-…plus a structure designed so new certifications and paths (Cloud Practitioner, Developer
-Associate, TypeScript, Node.js, and beyond) can be dropped in with zero code changes.
+Ships today with **1,400+ cards across 9 courses**, **8 practice exams**, per-domain
+**build-along projects**, and **🎤 Interview Prep** on the developer paths:
+
+| Category | Track | Course | Code | Practice exams |
+|----------|-------|--------|------|----------------|
+| Certifications | AWS | ☁️ Cloud Practitioner | CLF-C02 | ✅ 2 |
+| Certifications | AWS | 🤖 AI Practitioner | AIF-C01 | ✅ 2 |
+| Certifications | AWS | 🧑‍💻 Developer – Associate | DVA-C02 | ✅ 2 |
+| Certifications | AWS | 🏛️ Solutions Architect – Associate | SAA-C03 | ✅ 2 |
+| Developer | Languages & Frameworks | 🟨 JavaScript Mastery | JS | 🎤 interview prep |
+| Developer | Languages & Frameworks | ⚛️ React with Hooks | React | 🎤 interview prep |
+| Developer | DevOps | 🏗️ Terraform | Terraform | — |
+| Developer | DevOps | 🐳 Docker | Docker | — |
+| Developer | DevOps | ☸️ Kubernetes | K8s | — |
+
+New tracks (GCP, Azure, TypeScript, Node.js…) drop in by adding a content module and a
+line in the nav tree — no other code changes.
 
 ---
 
@@ -27,6 +37,13 @@ Associate, TypeScript, Node.js, and beyond) can be dropped in with zero code cha
   `concept`, `analogy 💡`, `example 🧪`, `diagram 🗺️`, `exam tip 🎯`, `compare ⚖️`,
   interactive `quiz ❓` with instant feedback, and `qa 🎤` interview questions with a
   tap-to-reveal model answer + likely follow-ups.
+- **📝 Practice exams** — each AWS certification has full-length, exam-style practice
+  exams (single- and multi-response "choose two" questions). Answer at your own pace, then
+  get a scored **pass/fail** result with a full explained review. Best score is saved.
+- **🛠️ Build-along projects** — every domain has a "build it as you learn" project idea,
+  and later domains' projects **build on earlier ones**, so each course grows one real
+  project end-to-end (e.g. a serverless app, a photo-sharing architecture, an Expense
+  Tracker in vanilla JS then React, a containerised/orchestrated stack).
 - **Fun visual diagrams** — data-driven SVG/HTML diagrams (flows, stacks, pyramids,
   cycles, quadrants, comparisons) authored as plain data.
 - **No login. Device-local everything** — progress, streaks, bookmarks and badges are
@@ -151,13 +168,17 @@ drops its completion. Add new cards with new ids freely.)
 ```
 src/
   content/
-    types.ts                     # the content schema (Certification → Domain → Chapter → Section → Card)
-    index.ts                     # registry of all certifications (+ "coming soon" teasers)
-    certifications/             # one module per track (certs + learning paths)
-      aws-ai-practitioner.ts      # AIF-C01 content
-      aws-solutions-architect.ts  # SAA-C03 content
-      javascript.ts               # JavaScript path + interview prep
-      reactjs.ts                  # React path + interview prep
+    types.ts                     # schema (Certification → Domain → Chapter → Section → Card; ProjectIdea; PracticeExam)
+    index.ts                     # course registry + the Home nav tree (categories → groups → courses)
+    projects.ts                  # per-domain build-along project ideas (registry override)
+    certifications/             # one module per course (certs + learning paths)
+      aws-cloud-practitioner.ts   # CLF-C02
+      aws-ai-practitioner.ts      # AIF-C01
+      aws-developer-associate.ts  # DVA-C02
+      aws-solutions-architect.ts  # SAA-C03
+      javascript.ts / reactjs.ts  # dev paths + interview prep
+      terraform.ts / docker.ts / kubernetes.ts   # DevOps paths
+    exams/                      # practice exams per certification (+ registry index)
   store/
     ProgressContext.tsx          # localStorage state: progress, bookmarks, streaks, badges, XP
     badges.ts                    # badge/milestone definitions + XP→level curve

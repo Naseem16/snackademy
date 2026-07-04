@@ -93,13 +93,46 @@ export interface Chapter {
   sections: Section[]
 }
 
+/** A progressive "build something" idea attached to a domain. Later domains'
+ * projects should build on earlier ones to form a mini learning journey. */
+export interface ProjectIdea {
+  title: string
+  /** what to build using this domain's concepts (markdown-lite) */
+  brief: string
+  /** how it extends the previous domain's project, if any */
+  buildsOn?: string
+  /** optional stretch goal for keen learners */
+  stretch?: string
+}
+
 export interface Domain {
   id: string
   title: string
   emoji?: string
   weight?: string // exam weight, e.g. "20%"
   description?: string
+  project?: ProjectIdea
   chapters: Chapter[]
+}
+
+// ── Practice exams (certifications only) ──────────────────────────────────
+export interface ExamQuestion {
+  id: string
+  question: string
+  /** One OR more options may be correct (multi-response). */
+  options: QuizOption[]
+  explanation: string
+  /** optional label of the domain/topic this question tests */
+  topic?: string
+}
+
+export interface PracticeExam {
+  id: string
+  title: string
+  description?: string
+  /** minutes; used only to display a suggested time (no hard timer). */
+  suggestedMinutes?: number
+  questions: ExamQuestion[]
 }
 
 export type CertLevel =
