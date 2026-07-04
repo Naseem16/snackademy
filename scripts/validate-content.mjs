@@ -105,8 +105,10 @@ for (const cert of certifications) {
               }
             }
           } else if (card.kind === 'compare') {
-            if (!card.compare || !card.compare.headers || !card.compare.rows)
-              warnings.push(`[${cert.id}/${card.id}] compare card missing table`)
+            // A compare card can render via a table, a compare diagram, or body.
+            const hasTable = card.compare && card.compare.headers && card.compare.rows
+            if (!hasTable && !card.diagram && !card.body)
+              warnings.push(`[${cert.id}/${card.id}] compare card has nothing to render`)
           } else if (card.kind === 'qa') {
             if (!card.question)
               errors.push(`[${cert.id}/${card.id}] qa card missing question`)
