@@ -7,7 +7,15 @@ import { useProgress } from '../store/ProgressContext'
 import CardView from '../components/CardView'
 import { BookmarkIcon, ChevronLeft, ChevronRight, CheckIcon } from '../components/Icons'
 
+// Keying the inner viewer by sectionId forces a clean remount whenever the
+// learner moves to a different section (e.g. via the "Next section" button on
+// the finish screen), so per-section state (index / finished) never leaks over.
 export default function CardViewer() {
+  const { sectionId } = useParams()
+  return <CardViewerInner key={sectionId} />
+}
+
+function CardViewerInner() {
   const { certId, sectionId } = useParams()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()

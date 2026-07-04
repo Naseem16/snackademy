@@ -77,7 +77,7 @@ export function PageHeader({
       <div className="flex items-center gap-2">
         <button
           aria-label="Back"
-          onClick={() => (window.history.length > 1 ? navigate(-1) : navigate(fallback))}
+          onClick={() => navigate(fallback)}
           className="-ml-1 rounded-lg p-1.5 text-slate-300 hover:bg-white/10"
         >
           <ChevronLeft />
