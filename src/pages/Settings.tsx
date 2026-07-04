@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { certifications } from '../content'
 import { useProgress } from '../store/ProgressContext'
+import CourseIcon from '../components/CourseIcon'
+import { ChevronRight } from '../components/Icons'
 
 export default function Settings() {
   const { resetProgress, stats } = useProgress()
@@ -12,6 +15,19 @@ export default function Settings() {
         <h1 className="text-2xl font-extrabold text-white">Settings</h1>
         <p className="text-sm text-slate-400">App info & your data.</p>
       </header>
+
+      {/* About the developer */}
+      <Link
+        to="/about"
+        className="card-surface mb-4 flex items-center gap-3 p-4 transition active:scale-[0.99]"
+      >
+        <span className="text-2xl">👨‍💻</span>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-sm font-bold text-white">About the developer</h2>
+          <p className="text-xs text-slate-400">Meet Naseem Akhtar, the author.</p>
+        </div>
+        <ChevronRight className="h-5 w-5 shrink-0 text-slate-500" />
+      </Link>
 
       {/* Privacy / data */}
       <section className="card-surface mb-4 p-4">
@@ -40,8 +56,8 @@ export default function Settings() {
             .filter((c) => c.available)
             .map((c) => (
               <div key={c.id} className="flex items-center justify-between text-xs">
-                <span className="text-slate-300">
-                  {c.icon} {c.shortTitle}
+                <span className="flex items-center gap-1.5 text-slate-300">
+                  <CourseIcon certId={c.id} emoji={c.icon} size={16} /> {c.shortTitle}
                 </span>
                 <span className="text-slate-500">
                   v{c.version} · updated {c.lastUpdated}
@@ -55,7 +71,7 @@ export default function Settings() {
       <section className="card-surface mb-4 p-4">
         <h2 className="text-sm font-bold text-white">📱 Install the app</h2>
         <p className="mt-1 text-xs leading-relaxed text-slate-400">
-          Add CertPrep to your home screen for a full-screen, offline experience. In your
+          Add SkillForge to your home screen for a full-screen, offline experience. In your
           browser menu choose <span className="text-slate-200">"Add to Home Screen"</span> or{' '}
           <span className="text-slate-200">"Install app"</span>.
         </p>
@@ -93,7 +109,7 @@ export default function Settings() {
       </section>
 
       <p className="pb-4 text-center text-[11px] text-slate-600">
-        CertPrep · built for focused, fun certification prep.
+        SkillForge · built for focused, fun learning.
       </p>
     </div>
   )

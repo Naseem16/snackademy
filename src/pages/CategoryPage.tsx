@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getCategory } from '../content'
 import { PageHeader } from '../components/Ui'
 import { ChevronRight } from '../components/Icons'
+import BrandGlyph, { hasBrandGlyph } from '../components/BrandGlyph'
 
 export default function CategoryPage() {
   const { categoryId } = useParams()
@@ -22,7 +23,11 @@ export default function CategoryPage() {
         {category.groups.map((group) => {
           const content = (
             <div className="flex items-center gap-4 p-4">
-              <span className="text-3xl">{group.icon}</span>
+              {hasBrandGlyph(group.id) ? (
+                <BrandGlyph name={group.id} size={40} />
+              ) : (
+                <span className="text-3xl">{group.icon}</span>
+              )}
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-bold text-white">{group.title}</h3>

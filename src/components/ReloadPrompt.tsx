@@ -22,7 +22,7 @@ export default function ReloadPrompt() {
       className="fixed inset-x-0 top-0 z-50 mx-auto flex max-w-md items-center justify-between gap-3 border-b border-brand-400/40 bg-slate-900/95 px-4 pb-3 backdrop-blur"
       // Offset below the iPhone status bar / notch (env inset works because the
       // viewport meta uses viewport-fit=cover). Falls back to 0.75rem elsewhere.
-      style={{ paddingTop: 'calc(env(safe-area-inset-top) + 0.75rem)' }}
+      style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
     >
       <div className="text-sm">
         <span className="font-semibold text-white">📚 New content available</span>

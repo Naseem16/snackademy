@@ -5,6 +5,7 @@ import { cardKey, countCardsInDomain } from '../content/types'
 import { useProgress } from '../store/ProgressContext'
 import { PageHeader, ProgressBar } from '../components/Ui'
 import { ChevronRight } from '../components/Icons'
+import CourseIcon from '../components/CourseIcon'
 
 export default function CertOverview() {
   const { certId } = useParams()
@@ -40,7 +41,7 @@ export default function CertOverview() {
       >
         <div className="rounded-2xl bg-slate-900/80 p-4">
           <div className="flex items-center gap-3">
-            <span className="text-4xl">{cert.icon}</span>
+            <CourseIcon certId={cert.id} emoji={cert.icon} size={40} />
             <div>
               <div className="text-lg font-extrabold text-white">{prog.pct}% complete</div>
               <div className="text-xs text-slate-400">

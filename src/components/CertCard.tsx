@@ -3,6 +3,7 @@ import { getCertification } from '../content'
 import { countCards } from '../content/types'
 import { useProgress } from '../store/ProgressContext'
 import { ProgressBar } from './Ui'
+import CourseIcon from './CourseIcon'
 
 /** A course tile with progress. Used on group pages. */
 export default function CertCard({ certId }: { certId: string }) {
@@ -18,7 +19,7 @@ export default function CertCard({ certId }: { certId: string }) {
     >
       <div className="rounded-2xl bg-slate-900/80 p-4">
         <div className="flex items-start justify-between">
-          <span className="text-3xl">{cert.icon}</span>
+          <CourseIcon certId={cert.id} emoji={cert.icon} size={34} />
           <div className="flex flex-col items-end gap-1">
             <span className="pill bg-white/10 text-slate-200">{cert.code}</span>
             <span className="pill bg-white/5 text-slate-400">{cert.level}</span>

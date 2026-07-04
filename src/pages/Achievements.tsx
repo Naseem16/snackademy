@@ -5,6 +5,7 @@ import { useProgress } from '../store/ProgressContext'
 import { BADGES, tierRing, xpForLevel } from '../store/badges'
 import { ProgressBar, ProgressRing } from '../components/Ui'
 import { FlameIcon } from '../components/Icons'
+import CourseIcon from '../components/CourseIcon'
 
 export default function Achievements() {
   const { stats, earnedBadgeIds, certProgress } = useProgress()
@@ -69,7 +70,7 @@ export default function Achievements() {
                 to={`/cert/${c.id}`}
                 className="card-surface flex items-center gap-3 p-3"
               >
-                <span className="text-2xl">{c.icon}</span>
+                <CourseIcon certId={c.id} emoji={c.icon} size={26} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between">
                     <span className="truncate text-sm font-semibold text-white">

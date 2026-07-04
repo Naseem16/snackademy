@@ -3,6 +3,7 @@ import { getCertification, getSection } from '../content'
 import type { Card } from '../content/types'
 import { useProgress } from '../store/ProgressContext'
 import { BookmarkIcon } from '../components/Icons'
+import CourseIcon from '../components/CourseIcon'
 
 interface ResolvedBookmark {
   key: string
@@ -85,7 +86,8 @@ export default function Bookmarks() {
                     {b.card.title ?? b.card.question ?? 'Card'}
                   </div>
                   <div className="truncate text-xs text-slate-400">
-                    {b.certIcon} {b.chapterTitle} · {b.sectionTitle}
+                    <CourseIcon certId={b.certId} emoji={b.certIcon} size={13} />{' '}
+                    {b.chapterTitle} · {b.sectionTitle}
                   </div>
                 </div>
               </Link>

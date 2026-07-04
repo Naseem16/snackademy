@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Link } from 'react-router-dom'
 import BottomNav from './components/BottomNav'
 import BadgeToast from './components/BadgeToast'
 import ReloadPrompt from './components/ReloadPrompt'
@@ -14,6 +14,7 @@ import ExamRunner from './pages/ExamRunner'
 import Achievements from './pages/Achievements'
 import Bookmarks from './pages/Bookmarks'
 import Settings from './pages/Settings'
+import About from './pages/About'
 
 // Reset scroll to the top whenever the route changes, so a new page never
 // inherits the previous page's scroll position.
@@ -44,10 +45,14 @@ export default function App() {
           <Route path="/progress" element={<Achievements />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/about" element={<About />} />
           <Route path="*" element={<Home />} />
         </Routes>
         <footer className="mt-8 border-t border-white/5 pt-4 text-center text-[11px] text-slate-600">
-          © 2026. All rights reserved.
+          <Link to="/about" className="text-slate-500 hover:text-brand-400">
+            About the developer
+          </Link>
+          <div className="mt-1">© 2026 Naseem Akhtar. All rights reserved.</div>
         </footer>
       </main>
       <BadgeToast />

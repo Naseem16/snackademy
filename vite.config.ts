@@ -32,10 +32,10 @@ export default defineConfig({
       registerType: 'prompt',
       includeAssets: ['favicon.svg', 'robots.txt'],
       manifest: {
-        name: 'CertPrep — AWS Certification Learning',
-        short_name: 'CertPrep',
+        name: 'SkillForge — Certifications & Developer Learning',
+        short_name: 'SkillForge',
         description:
-          'Fun, card-based, mobile-first prep for AWS AI Practitioner, Solutions Architect and more.',
+          'Fun, card-based, mobile-first prep for cloud certifications, developer skills and interviews.',
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',

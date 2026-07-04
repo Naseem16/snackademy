@@ -3,6 +3,7 @@ import { navCategories, getCertification, getSection } from '../content'
 import { useProgress } from '../store/ProgressContext'
 import { ProgressBar, ProgressRing } from '../components/Ui'
 import { FlameIcon, SparkleIcon, ChevronRight } from '../components/Icons'
+import CourseIcon from '../components/CourseIcon'
 import { xpForLevel } from '../store/badges'
 
 function ContinueCard() {
@@ -30,7 +31,9 @@ function ContinueCard() {
             {cert.shortTitle} · {found.chapter.title}
           </div>
         </div>
-        <span className="shrink-0 text-2xl">{cert.icon}</span>
+        <span className="shrink-0">
+          <CourseIcon certId={cert.id} emoji={cert.icon} size={28} />
+        </span>
       </div>
       <ProgressBar pct={prog.pct} className="mt-3" />
     </Link>
@@ -99,19 +102,17 @@ export default function Home() {
     <div>
       <header className="mb-5 pt-2">
         <h1 className="text-2xl font-extrabold text-white">
-          CertPrep<span className="text-brand-400">.</span>
+          SkillForge<span className="text-brand-400">.</span>
         </h1>
         <p className="text-sm text-slate-400">
-          Bite-sized, fun prep — certifications, dev skills &amp; interview practice.
+          Forge your skills — certifications, dev paths &amp; interview practice.
         </p>
       </header>
 
       <StatStrip />
       <ContinueCard />
 
-      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
-        What do you want to learn?
-      </h2>
+      <h2 className="mb-3 text-lg font-bold text-white">Where would you like to start?</h2>
       <div className="grid grid-cols-1 gap-3">
         {navCategories.map((c) => (
           <CategoryTile key={c.id} categoryId={c.id} />
