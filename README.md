@@ -1,4 +1,4 @@
-# 🎓 SkillForge — Certifications & Developer Learning App
+# 🍿 Snackademy — Certifications & Developer Learning App
 
 A **mobile-first, card-based, gamified** web app for preparing for AWS certifications.
 Built to make studying *fun*: bite-sized cards, plain-English explanations, real-world
@@ -102,7 +102,7 @@ The base path is derived automatically from your repo name, so it just works.
    ```bash
    git init
    git add .
-   git commit -m "Initial commit: SkillForge learning app"
+   git commit -m "Initial commit: Snackademy learning app"
    git branch -M main
    git remote add origin https://github.com/<your-username>/<your-repo>.git
    git push -u origin main

@@ -32,8 +32,8 @@ export default defineConfig({
       registerType: 'prompt',
       includeAssets: ['favicon.svg', 'robots.txt'],
       manifest: {
-        name: 'SkillForge — Certifications & Developer Learning',
-        short_name: 'SkillForge',
+        name: 'Snackademy — Certifications & Developer Learning',
+        short_name: 'Snackademy',
         description:
           'Fun, card-based, mobile-first prep for cloud certifications, developer skills and interviews.',
         theme_color: '#0f172a',

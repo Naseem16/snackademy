@@ -71,7 +71,7 @@ export default function Settings() {
       <section className="card-surface mb-4 p-4">
         <h2 className="text-sm font-bold text-white">📱 Install the app</h2>
         <p className="mt-1 text-xs leading-relaxed text-slate-400">
-          Add SkillForge to your home screen for a full-screen, offline experience. In your
+          Add Snackademy to your home screen for a full-screen, offline experience. In your
           browser menu choose <span className="text-slate-200">"Add to Home Screen"</span> or{' '}
           <span className="text-slate-200">"Install app"</span>.
         </p>
@@ -109,7 +109,7 @@ export default function Settings() {
       </section>
 
       <p className="pb-4 text-center text-[11px] text-slate-600">
-        SkillForge · built for focused, fun learning.
+        Snackademy · bite-sized learning, big results.
       </p>
     </div>
   )

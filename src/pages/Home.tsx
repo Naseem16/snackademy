@@ -102,10 +102,10 @@ export default function Home() {
     <div>
       <header className="mb-5 pt-2">
         <h1 className="text-2xl font-extrabold text-white">
-          SkillForge<span className="text-brand-400">.</span>
+          Snackademy<span className="text-brand-400">.</span>
         </h1>
         <p className="text-sm text-slate-400">
-          Forge your skills — certifications, dev paths &amp; interview practice.
+          Snack-sized learning — certifications, dev paths &amp; interview prep.
         </p>
       </header>
 
