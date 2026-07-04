@@ -1,8 +1,10 @@
 import { Link, useParams } from 'react-router-dom'
 import { getCertification, getDomain } from '../content'
+import { projectIdeas } from '../content/projects'
 import { useProgress } from '../store/ProgressContext'
 import { PageHeader, ProgressBar } from '../components/Ui'
 import { CheckIcon } from '../components/Icons'
+import MarkdownLite from '../components/MarkdownLite'
 
 export default function DomainPage() {
   const { certId, domainId } = useParams()
@@ -17,6 +19,9 @@ export default function DomainPage() {
       </div>
     )
 
+  // Registry override takes precedence over an inline domain.project.
+  const project = projectIdeas[cert.id]?.[domain.id] ?? domain.project
+
   return (
     <div>
       <PageHeader
@@ -27,6 +32,29 @@ export default function DomainPage() {
 
       {domain.description && (
         <p className="mb-4 text-sm leading-relaxed text-slate-300">{domain.description}</p>
+      )}
+
+      {project && (
+        <div className="mb-5 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-teal-600/10 p-4">
+          <div className="mb-1 flex items-center gap-2">
+            <span className="text-lg">🛠️</span>
+            <span className="text-xs font-bold uppercase tracking-wide text-emerald-300">
+              Build it as you learn
+            </span>
+          </div>
+          <h3 className="mb-1 text-sm font-bold text-white">{project.title}</h3>
+          {project.buildsOn && (
+            <p className="mb-2 text-xs italic text-emerald-200/80">↪ {project.buildsOn}</p>
+          )}
+          <div className="text-sm text-slate-200">
+            <MarkdownLite text={project.brief} />
+          </div>
+          {project.stretch && (
+            <p className="mt-1 text-xs text-slate-400">
+              <span className="font-semibold text-amber-300">Stretch:</span> {project.stretch}
+            </p>
+          )}
+        </div>
       )}
 
       <div className="space-y-5">

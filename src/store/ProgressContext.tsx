@@ -10,6 +10,12 @@ interface QuizResult {
   ts: number
 }
 
+interface ExamScore {
+  best: number // 0..100
+  attempts: number
+  lastTs: number
+}
+
 interface PersistState {
   completedCards: Record<string, number> // cardKey -> completion timestamp
   bookmarks: Record<string, number> // cardKey -> timestamp
@@ -17,6 +23,7 @@ interface PersistState {
   earnedBadges: Record<string, number> // badgeId -> earned timestamp
   streak: { current: number; longest: number; lastActiveDay: string }
   lastVisited: Record<string, { sectionId: string; cardIndex: number }> // certId -> position
+  examScores: Record<string, ExamScore> // `${certId}::${examId}` -> score
 }
 
 const emptyState: PersistState = {
@@ -26,6 +33,11 @@ const emptyState: PersistState = {
   earnedBadges: {},
   streak: { current: 0, longest: 0, lastActiveDay: '' },
   lastVisited: {},
+  examScores: {},
+}
+
+export function examKey(certId: string, examId: string): string {
+  return `${certId}::${examId}`
 }
 
 function todayKey(): string {
@@ -101,6 +113,8 @@ interface ProgressContextValue {
   toggleBookmark: (key: string) => void
   recordQuiz: (key: string, correct: boolean) => void
   setLastVisited: (certId: string, sectionId: string, cardIndex: number) => void
+  recordExam: (certId: string, examId: string, scorePct: number) => void
+  examScore: (certId: string, examId: string) => ExamScore | undefined
   resetProgress: () => void
   // gamification
   stats: LearnerStats
@@ -146,7 +160,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     const quizzesAnswered = quizValues.length
     const quizzesCorrect = quizValues.filter((q) => q.correct).length
 
-    const xp = cardsCompleted * 10 + quizzesCorrect * 5
+    const examValues = Object.values(state.examScores)
+    const examsPassed = examValues.filter((e) => e.best >= 70).length
+    const bestExamScore = examValues.reduce((m, e) => Math.max(m, e.best), 0)
+
+    const xp =
+      cardsCompleted * 10 +
+      quizzesCorrect * 5 +
+      examValues.reduce((sum, e) => sum + Math.round(e.best / 5), 0)
     const level = levelForXp(xp)
 
     return {
@@ -160,6 +181,8 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       domainsCompleted,
       certsCompleted,
       activeToday: state.streak.lastActiveDay === todayKey(),
+      examsPassed,
+      bestExamScore,
       xp,
       level,
     }
@@ -247,6 +270,22 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       lastVisited: { ...prev.lastVisited, [certId]: { sectionId, cardIndex } },
     }))
 
+  const recordExam = (certId: string, examId: string, scorePct: number) =>
+    setState((prev) => {
+      const key = examKey(certId, examId)
+      const existing = prev.examScores[key]
+      const next: ExamScore = {
+        best: Math.max(existing?.best ?? 0, scorePct),
+        attempts: (existing?.attempts ?? 0) + 1,
+        lastTs: Date.now(),
+      }
+      return {
+        ...prev,
+        examScores: { ...prev.examScores, [key]: next },
+        streak: touchStreak(prev),
+      }
+    })
+
   const resetProgress = () => {
     setState(emptyState)
     setNewlyEarned([])
@@ -278,6 +317,8 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     toggleBookmark,
     recordQuiz,
     setLastVisited,
+    recordExam,
+    examScore: (certId, examId) => state.examScores[examKey(certId, examId)],
     resetProgress,
     stats,
     earnedBadgeIds,

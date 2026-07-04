@@ -1,16 +1,14 @@
 import { Link } from 'react-router-dom'
-import { certGroups, getCertification, getSection } from '../content'
-import { countCards } from '../content/types'
+import { navCategories, getCertification, getSection } from '../content'
 import { useProgress } from '../store/ProgressContext'
 import { ProgressBar, ProgressRing } from '../components/Ui'
-import { FlameIcon, SparkleIcon } from '../components/Icons'
+import { FlameIcon, SparkleIcon, ChevronRight } from '../components/Icons'
 import { xpForLevel } from '../store/badges'
 
 function ContinueCard() {
   const { state, certProgress } = useProgress()
   const entries = Object.entries(state.lastVisited)
   if (entries.length === 0) return null
-  // most recent by no timestamp; just take first available cert with a position
   const [certId, pos] = entries[entries.length - 1]
   const cert = getCertification(certId)
   if (!cert) return null
@@ -72,47 +70,26 @@ function StatStrip() {
   )
 }
 
-function CertCard({ certId }: { certId: string }) {
-  const cert = getCertification(certId)!
-  const { certProgress } = useProgress()
-  const prog = certProgress(certId)
-  const total = countCards(cert)
-
-  const inner = (
-    <div
-      className={`relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${cert.gradient} p-[1px]`}
-    >
-      <div className="rounded-2xl bg-slate-900/80 p-4">
-        <div className="flex items-start justify-between">
-          <span className="text-3xl">{cert.icon}</span>
-          <div className="flex flex-col items-end gap-1">
-            <span className="pill bg-white/10 text-slate-200">{cert.code}</span>
-            {!cert.available && (
-              <span className="pill bg-white/10 text-amber-200">Coming soon</span>
-            )}
-          </div>
-        </div>
-        <h3 className="mt-2 text-base font-bold leading-tight text-white">{cert.title}</h3>
-        <p className="mt-0.5 text-xs text-slate-400">{cert.tagline}</p>
-        {cert.available ? (
-          <>
-            <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
-              <span>{prog.done} / {total} cards</span>
-              <span className="font-semibold text-white">{prog.pct}%</span>
-            </div>
-            <ProgressBar pct={prog.pct} className="mt-1.5" />
-          </>
-        ) : (
-          <p className="mt-3 text-xs text-slate-500">{cert.description}</p>
-        )}
-      </div>
-    </div>
-  )
-
-  if (!cert.available) return <div className="opacity-60">{inner}</div>
+function CategoryTile({ categoryId }: { categoryId: string }) {
+  const category = navCategories.find((c) => c.id === categoryId)!
+  const liveGroups = category.groups.filter((g) => g.available)
+  const courseCount = liveGroups.reduce((n, g) => n + g.certIds.length, 0)
   return (
-    <Link to={`/cert/${certId}`} className="block transition active:scale-[0.98]">
-      {inner}
+    <Link
+      to={`/learn/${category.id}`}
+      className={`block rounded-2xl bg-gradient-to-br ${category.gradient} p-[1px] transition active:scale-[0.98]`}
+    >
+      <div className="flex items-center gap-4 rounded-2xl bg-slate-900/80 p-5">
+        <span className="text-4xl">{category.icon}</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-lg font-extrabold text-white">{category.title}</h3>
+          <p className="text-xs text-slate-400">{category.subtitle}</p>
+          <p className="mt-1 text-[11px] font-medium text-slate-500">
+            {courseCount} courses · {liveGroups.length} tracks
+          </p>
+        </div>
+        <ChevronRight className="h-5 w-5 shrink-0 text-slate-500" />
+      </div>
     </Link>
   )
 }
@@ -125,28 +102,21 @@ export default function Home() {
           CertPrep<span className="text-brand-400">.</span>
         </h1>
         <p className="text-sm text-slate-400">
-          Bite-sized, fun prep — AWS certs, JavaScript, React &amp; interview prep.
+          Bite-sized, fun prep — certifications, dev skills &amp; interview practice.
         </p>
       </header>
 
       <StatStrip />
       <ContinueCard />
 
-      {certGroups().map((group) => (
-        <section key={group.id} className="mb-6">
-          <div className="mb-2 flex items-baseline justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-              {group.title}
-            </h2>
-            <span className="text-[11px] text-slate-500">{group.subtitle}</span>
-          </div>
-          <div className="grid grid-cols-1 gap-3">
-            {group.certs.map((c) => (
-              <CertCard key={c.id} certId={c.id} />
-            ))}
-          </div>
-        </section>
-      ))}
+      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
+        What do you want to learn?
+      </h2>
+      <div className="grid grid-cols-1 gap-3">
+        {navCategories.map((c) => (
+          <CategoryTile key={c.id} categoryId={c.id} />
+        ))}
+      </div>
     </div>
   )
 }

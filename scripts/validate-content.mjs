@@ -11,16 +11,29 @@ const tmp = join(root, '.content-check')
 mkdirSync(tmp, { recursive: true })
 const outfile = join(tmp, 'content.mjs')
 
-await build({
-  entryPoints: [join(root, 'src/content/index.ts')],
-  bundle: true,
-  format: 'esm',
-  platform: 'node',
-  outfile,
-  logLevel: 'error',
-})
+const examsOut = join(tmp, 'exams.mjs')
+
+await Promise.all([
+  build({
+    entryPoints: [join(root, 'src/content/index.ts')],
+    bundle: true,
+    format: 'esm',
+    platform: 'node',
+    outfile,
+    logLevel: 'error',
+  }),
+  build({
+    entryPoints: [join(root, 'src/content/exams/index.ts')],
+    bundle: true,
+    format: 'esm',
+    platform: 'node',
+    outfile: examsOut,
+    logLevel: 'error',
+  }),
+])
 
 const { certifications } = await import(pathToFileURL(outfile).href)
+const { examsByCert } = await import(pathToFileURL(examsOut).href)
 
 const errors = []
 const warnings = []
@@ -112,9 +125,40 @@ for (const cert of certifications) {
   )
 }
 
+// ── Practice exams ────────────────────────────────────────────────────────
+let totalExams = 0
+let totalExamQuestions = 0
+for (const [certId, exams] of Object.entries(examsByCert)) {
+  const examIds = new Set()
+  for (const exam of exams) {
+    totalExams++
+    if (examIds.has(exam.id)) errors.push(`[exam ${certId}] duplicate exam id: ${exam.id}`)
+    examIds.add(exam.id)
+    const qIds = new Set()
+    if (!exam.questions || exam.questions.length === 0)
+      errors.push(`[exam ${certId}/${exam.id}] has no questions`)
+    for (const q of exam.questions ?? []) {
+      totalExamQuestions++
+      if (qIds.has(q.id)) errors.push(`[exam ${certId}/${exam.id}] duplicate question id: ${q.id}`)
+      qIds.add(q.id)
+      const opts = q.options ?? []
+      const correct = opts.filter((o) => o.correct).length
+      if (!q.question) errors.push(`[exam ${certId}/${q.id}] missing question text`)
+      if (opts.length < 2) errors.push(`[exam ${certId}/${q.id}] needs >=2 options`)
+      if (correct < 1) errors.push(`[exam ${certId}/${q.id}] has no correct option`)
+      if (new Set(opts.map((o) => o.id)).size !== opts.length)
+        errors.push(`[exam ${certId}/${q.id}] duplicate option ids`)
+      if (!q.explanation) warnings.push(`[exam ${certId}/${q.id}] missing explanation`)
+    }
+  }
+  console.log(`✓ exams: ${certId.padEnd(24)} ${exams.length} exams`)
+}
+
 rmSync(tmp, { recursive: true, force: true })
 
-console.log(`\nTotals: ${totalCards} cards, ${totalQuizzes} quizzes`)
+console.log(
+  `\nTotals: ${totalCards} cards, ${totalQuizzes} quizzes, ${totalExams} exams (${totalExamQuestions} questions)`,
+)
 if (warnings.length) {
   console.log(`\n⚠ ${warnings.length} warning(s):`)
   for (const w of warnings.slice(0, 20)) console.log('  ' + w)

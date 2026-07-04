@@ -1,8 +1,10 @@
 import { Link, useParams } from 'react-router-dom'
-import { getCertification } from '../content'
+import { getCertification, getGroupForCert } from '../content'
+import { getExams } from '../content/exams'
 import { cardKey, countCardsInDomain } from '../content/types'
 import { useProgress } from '../store/ProgressContext'
 import { PageHeader, ProgressBar } from '../components/Ui'
+import { ChevronRight } from '../components/Icons'
 
 export default function CertOverview() {
   const { certId } = useParams()
@@ -12,6 +14,9 @@ export default function CertOverview() {
   if (!cert) return <Navigate />
 
   const prog = certProgress(cert.id)
+  const groupInfo = getGroupForCert(cert.id)
+  const backTo = groupInfo ? `/group/${groupInfo.group.id}` : '/'
+  const exams = getExams(cert.id)
 
   const domainProgress = (domainId: string) => {
     const domain = cert.domains.find((d) => d.id === domainId)!
@@ -28,7 +33,7 @@ export default function CertOverview() {
 
   return (
     <div>
-      <PageHeader title={cert.title} subtitle={`${cert.code} · ${cert.level}`} fallback="/" />
+      <PageHeader title={cert.title} subtitle={`${cert.code} · ${cert.level}`} fallback={backTo} />
 
       <div
         className={`mb-4 rounded-2xl bg-gradient-to-br ${cert.gradient} p-[1px]`}
@@ -63,6 +68,22 @@ export default function CertOverview() {
             ))}
           </div>
         </div>
+      )}
+
+      {exams.length > 0 && (
+        <Link
+          to={`/cert/${cert.id}/exams`}
+          className="mb-5 flex items-center gap-3 rounded-2xl border border-brand-400/30 bg-gradient-to-br from-brand-500/15 to-amber-600/10 p-4 transition active:scale-[0.99]"
+        >
+          <span className="text-2xl">📝</span>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-sm font-bold text-white">Practice Exams</h3>
+            <p className="text-xs text-slate-400">
+              {exams.length} exam sets · test your readiness with scored, explained questions
+            </p>
+          </div>
+          <ChevronRight className="h-5 w-5 shrink-0 text-brand-300" />
+        </Link>
       )}
 
       <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
