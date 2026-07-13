@@ -79,8 +79,7 @@ export default function About() {
           By day, I'm a <strong className="text-white">Project Lead and Solutions
           Architect</strong>, orchestrating DevSecOps, Spring Boot, microservices, and AWS
           cloud infrastructure like a maestro. By night — or on a good coffee break — I'm
-          decoding AI, designing smarter clusters in Python, and optimizing checkout flows
-          for digital-first users, all while staying true to human-centered design.
+          decoding AI, designing smarter agents, all while staying true to human-centered design.
         </p>
         <p>
           A tech polymath with a decade of hands-on software wizardry, I'm the go-to person
