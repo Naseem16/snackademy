@@ -20,10 +20,16 @@ function LinkedInIcon() {
   )
 }
 
+// Drop an author photo into /public named author.jpg (or .png/.jpeg/.webp) and
+// it replaces the placeholder avatar automatically — no code change needed.
+const PHOTO_CANDIDATES = ['author.jpg', 'author.jpeg', 'author.png', 'author.webp']
+
 export default function About() {
-  const [imgOk, setImgOk] = useState(true)
-  // Drop an `author.jpg` into /public to replace the placeholder avatar.
-  const photo = `${import.meta.env.BASE_URL}author.jpg`
+  const [photoIdx, setPhotoIdx] = useState(0)
+  const photo =
+    photoIdx < PHOTO_CANDIDATES.length
+      ? `${import.meta.env.BASE_URL}${PHOTO_CANDIDATES[photoIdx]}`
+      : null
 
   return (
     <div>
@@ -34,12 +40,12 @@ export default function About() {
         <div className="h-28 w-full rounded-2xl bg-gradient-to-br from-brand-500 via-fuchsia-600 to-indigo-600" />
         <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
           <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-slate-900 bg-slate-800 shadow-xl">
-            {imgOk ? (
+            {photo ? (
               <img
                 src={photo}
                 alt="Naseem Akhtar"
                 className="h-full w-full object-cover"
-                onError={() => setImgOk(false)}
+                onError={() => setPhotoIdx((i) => i + 1)}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-500 to-indigo-600 text-2xl font-extrabold text-white">
@@ -98,10 +104,6 @@ export default function About() {
       >
         <LinkedInIcon /> Connect on LinkedIn
       </a>
-
-      <p className="mt-4 text-center text-[11px] text-slate-600">
-        © 2026 Naseem Akhtar. All rights reserved.
-      </p>
     </div>
   )
 }
