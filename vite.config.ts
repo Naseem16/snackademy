@@ -55,6 +55,16 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // The author photo is large and non-essential offline — keep it out of
+        // the precache; it still loads online and is cached at runtime.
+        globIgnores: ['**/author.*'],
+        runtimeCaching: [
+          {
+            urlPattern: /author\.(png|jpe?g|webp)$/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'author-photo', expiration: { maxEntries: 1 } },
+          },
+        ],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },

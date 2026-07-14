@@ -116,7 +116,7 @@ function CardViewerInner() {
   return (
     <div className="flex min-h-[calc(100vh-7rem)] flex-col">
       {/* Header */}
-      <div className="sticky top-0 z-20 -mx-4 mb-3 border-b border-white/10 bg-slate-900/80 px-4 py-3 backdrop-blur">
+      <div className="sticky safe-top z-20 -mx-4 mb-3 border-b border-white/10 bg-slate-900/80 px-4 py-3 backdrop-blur">
         <div className="flex items-center gap-2">
           <button
             aria-label="Back"

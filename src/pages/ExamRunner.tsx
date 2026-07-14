@@ -82,7 +82,7 @@ export default function ExamRunner() {
     const passed = savedPct >= pass
     return (
       <div>
-        <div className="sticky top-0 z-20 -mx-4 mb-4 border-b border-white/10 bg-slate-900/80 px-4 py-3 backdrop-blur">
+        <div className="sticky safe-top z-20 -mx-4 mb-4 border-b border-white/10 bg-slate-900/80 px-4 py-3 backdrop-blur">
           <h1 className="text-base font-bold text-white">{exam.title} — Results</h1>
           <p className="text-xs text-slate-400">{cert.shortTitle}</p>
         </div>
@@ -178,7 +178,7 @@ export default function ExamRunner() {
   // ── Taking view ───────────────────────────────────────────────────────
   return (
     <div className="flex min-h-[calc(100vh-7rem)] flex-col">
-      <div className="sticky top-0 z-20 -mx-4 mb-3 border-b border-white/10 bg-slate-900/80 px-4 py-3 backdrop-blur">
+      <div className="sticky safe-top z-20 -mx-4 mb-3 border-b border-white/10 bg-slate-900/80 px-4 py-3 backdrop-blur">
         <div className="flex items-center gap-2">
           <button
             aria-label="Exit exam"

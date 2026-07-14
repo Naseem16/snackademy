@@ -30,6 +30,7 @@ function ScrollToTop() {
 export default function App() {
   return (
     <div className="mx-auto flex min-h-full max-w-md flex-col">
+      <div aria-hidden className="status-bar-scrim" />
       <ScrollToTop />
       <ReloadPrompt />
       <main className="flex-1 px-4 pb-24 pt-3">

@@ -31,6 +31,26 @@ body {
   scrollbar-width: none;
 }
 
+/* Sticky headers stick BELOW the device safe area (iPhone notch / status bar),
+   so they don't slide under the clock/battery in an installed PWA. On devices
+   with no inset this resolves to top:0. */
+.safe-top {
+  top: env(safe-area-inset-top);
+}
+
+/* Opaque strip that masks page content scrolling under the translucent iOS
+   status bar. Height collapses to 0 where there is no inset. */
+.status-bar-scrim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  background: #0b1120;
+  z-index: 40;
+  pointer-events: none;
+}
+
 @layer components {
   .card-surface {
     @apply rounded-2xl border border-white/10 bg-slate-800/60 backdrop-blur;
